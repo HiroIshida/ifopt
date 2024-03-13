@@ -72,7 +72,6 @@ class SnoptAdapter : public snoptProblemA {
 
 // additional variables as Snopt76 base class doesn't have them, not really
 // necessary but to keep the same structure of the original SnoptAdapter
-#ifdef SNOPT76
 
  public:
   int jacComputed = 0;
@@ -89,7 +88,6 @@ class SnoptAdapter : public snoptProblemA {
   int lenA, lenG, neA, neG;
   int *iAfun, *jAvar, *iGfun, *jGvar;
   double* A;
-#endif
 };
 
 }  // namespace ifopt
