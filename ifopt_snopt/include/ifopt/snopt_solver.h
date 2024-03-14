@@ -47,7 +47,11 @@ class SnoptSolver : public Solver {
    * @param [in/out]  nlp  The specific problem to be used and modified.
    */
   void Solve(Problem& nlp) override;
-  void Solve(Problem& nlp, Eigen::VectorXd& x0);
+  void Solve(Problem& nlp, Eigen::VectorXd& x0, Eigen::VectorXi xstate0);
+
+ public:
+  Eigen::VectorXd x_sol;
+  Eigen::VectorXi xstate_sol;
 };
 
 } /* namespace ifopt */

@@ -43,8 +43,6 @@ int main()
 
   SnoptSolver solver;
   solver.Solve(nlp);
-
-  auto x0 = nlp.GetOptVariables()->GetValues();
-  solver.Solve(nlp, x0);
+  solver.Solve(nlp, solver.x_sol, solver.xstate_sol);
 
 }

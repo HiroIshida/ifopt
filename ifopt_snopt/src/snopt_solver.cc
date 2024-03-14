@@ -34,31 +34,43 @@ void SnoptSolver::Solve(Problem& ref)
 {
     // coinsider x0 = empty
     Eigen::VectorXd x0;
-    Solve(ref, x0);
+    Eigen::VectorXi xstate0;
+    Solve(ref, x0, xstate0);
 }
 
-void SnoptSolver::Solve(Problem& ref, Eigen::VectorXd& x0)
+void SnoptSolver::Solve(Problem& ref, Eigen::VectorXd& x0, Eigen::VectorXi xstate0)
 {
 
   SnoptAdapter snopt(ref);
   snopt.Init();
 
-
   size_t dim_opt = ref.GetNumberOfOptimizationVariables();
 
   if (x0.size() > 0)
   {
-      // set x0 (eigen) to snopt.x (double array)
       size_t n = x0.size();
       if (n != dim_opt)
       {
           std::string msg = "ERROR: Snopt failed to find a solution. EXIT: 0, INFO: 0\n";
           throw std::runtime_error(msg);
       }
-      // copy x0 to snopt.x
       for(size_t i = 0; i < n; i++)
       {
           snopt.x[i] = x0(i);
+      }
+  }
+
+  if (xstate0.size() > 0)
+  {
+      size_t n = xstate0.size();
+      if (n != dim_opt)
+      {
+          std::string msg = "ERROR: Snopt failed to find a solution. EXIT: 0, INFO: 0\n";
+          throw std::runtime_error(msg);
+      }
+      for(size_t i = 0; i < n; i++)
+      {
+          snopt.xstate[i] = xstate0(i);
       }
   }
 
@@ -103,7 +115,14 @@ void SnoptSolver::Solve(Problem& ref, Eigen::VectorXd& x0)
     throw std::runtime_error(msg);
   }
 
-  snopt.SetVariables();
+  // allocate vector to x_sol and xstate_sol
+  this->x_sol = Eigen::VectorXd(dim_opt);
+  this->xstate_sol = Eigen::VectorXi(dim_opt);
+  for(size_t i = 0; i < dim_opt; i++)
+  {
+      this->x_sol(i) = snopt.x[i];
+      this->xstate_sol(i) = snopt.xstate[i];
+  }
 }
 
 } /* namespace ifopt */
