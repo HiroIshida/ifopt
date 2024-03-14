@@ -43,6 +43,6 @@ int main()
 
   SnoptSolver solver;
   solver.Solve(nlp);
-  solver.Solve(nlp, solver.x_sol, solver.xstate_sol);
+  solver.Solve(nlp, solver.x_sol, solver.xstate_sol, solver.f_sol, solver.fstate_sol);
 
 }
