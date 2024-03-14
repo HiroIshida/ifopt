@@ -44,5 +44,7 @@ int main()
   SnoptSolver solver;
   solver.Solve(nlp);
 
-  std::cout << nlp.GetOptVariables()->GetValues().transpose() << std::endl;
+  auto x0 = nlp.GetOptVariables()->GetValues();
+  solver.Solve(nlp, x0);
+
 }

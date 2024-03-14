@@ -27,6 +27,7 @@ ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 #ifndef IFOPT_SRC_IFOPT_SNOPT_INCLUDE_IFOPT_SNOPT_H_
 #define IFOPT_SRC_IFOPT_SNOPT_INCLUDE_IFOPT_SNOPT_H_
 
+#include <optional>
 #include <ifopt/problem.h>
 #include <ifopt/solver.h>
 
@@ -46,6 +47,7 @@ class SnoptSolver : public Solver {
    * @param [in/out]  nlp  The specific problem to be used and modified.
    */
   void Solve(Problem& nlp) override;
+  void Solve(Problem& nlp, Eigen::VectorXd& x0);
 };
 
 } /* namespace ifopt */

@@ -24,6 +24,7 @@ OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF
 ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 ******************************************************************************/
 
+#include <iostream>
 #include <ifopt/snopt_adapter.h>
 #include <ifopt/snopt_solver.h>
 
@@ -31,8 +32,35 @@ namespace ifopt {
 
 void SnoptSolver::Solve(Problem& ref)
 {
+    // coinsider x0 = empty
+    Eigen::VectorXd x0;
+    Solve(ref, x0);
+}
+
+void SnoptSolver::Solve(Problem& ref, Eigen::VectorXd& x0)
+{
+
   SnoptAdapter snopt(ref);
   snopt.Init();
+
+
+  size_t dim_opt = ref.GetNumberOfOptimizationVariables();
+
+  if (x0.size() > 0)
+  {
+      // set x0 (eigen) to snopt.x (double array)
+      size_t n = x0.size();
+      if (n != dim_opt)
+      {
+          std::string msg = "ERROR: Snopt failed to find a solution. EXIT: 0, INFO: 0\n";
+          throw std::runtime_error(msg);
+      }
+      // copy x0 to snopt.x
+      for(size_t i = 0; i < n; i++)
+      {
+          snopt.x[i] = x0(i);
+      }
+  }
 
   // A complete list of options can be found in the snopt user guide:
   // https://web.stanford.edu/group/SOL/guides/sndoc7.pdf
@@ -52,7 +80,7 @@ void SnoptSolver::Solve(Problem& ref)
                          1.0e-2);  // target complementarity gap
 
   // error codes as given in the manual.
-  int Cold = 0;  // Basis = 1, Warm = 2;
+  int Start = 2;  // Basis = 1, Warm = 2;
 
   // interface changed with snopt version 7.6
   int nS = 0;   // number of super-basic variables (not relevant for cold start)
@@ -60,7 +88,7 @@ void SnoptSolver::Solve(Problem& ref)
   double sInf;  // sInf : sum of infeasibilities
 
   status_ = snopt.solve(
-      Cold, snopt.neF, snopt.n, snopt.ObjAdd, snopt.ObjRow,
+      Start, snopt.neF, snopt.n, snopt.ObjAdd, snopt.ObjRow,
       &SnoptAdapter::ObjectiveAndConstraintFct, snopt.iAfun, snopt.jAvar,
       snopt.A, snopt.neA, snopt.iGfun, snopt.jGvar, snopt.neG, snopt.xlow,
       snopt.xupp, snopt.Flow, snopt.Fupp, snopt.x, snopt.xstate, snopt.xmul,
