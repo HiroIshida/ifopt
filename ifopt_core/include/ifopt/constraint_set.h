@@ -80,7 +80,7 @@ class ConstraintSet : public Component {
    * This function only combines the user-defined jacobians from
    * FillJacobianBlock().
    */
-  Jacobian GetJacobian() const final;
+  virtual Jacobian GetJacobian() const;
 
   /**
    * @brief Set individual Jacobians corresponding to each decision variable set.
