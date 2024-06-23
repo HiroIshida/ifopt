@@ -64,7 +64,7 @@ class Component {
  public:
   using Ptr = std::shared_ptr<Component>;
 
-  using Jacobian = Eigen::SparseMatrix<double, Eigen::RowMajor>;
+  using Jacobian = Eigen::SparseMatrix<double, Eigen::ColMajor>;
   using VectorXd = Eigen::VectorXd;
   using VecBound = std::vector<Bounds>;
 

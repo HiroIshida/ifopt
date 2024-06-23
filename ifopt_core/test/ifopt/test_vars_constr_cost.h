@@ -125,7 +125,7 @@ class ExConstraint : public ConstraintSet {
 
   Jacobian GetJacobian() const override
   {
-    Eigen::SparseMatrix<double, Eigen::RowMajor> jac_block(1, 2);
+    Eigen::SparseMatrix<double, Eigen::ColMajor> jac_block(1, 2);
     Vector2d x = GetVariables()->GetComponent("var_set1")->GetValues();
 
     jac_block.coeffRef(0, 0) =
